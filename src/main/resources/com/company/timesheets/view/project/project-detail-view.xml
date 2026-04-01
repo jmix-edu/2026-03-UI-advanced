@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://projectDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="projectDc"
+                  class="com.company.timesheets.entity.Project">
+            <fetchPlan extends="_base">
+                <property name="client" fetchPlan="_base"/>
+                <property name="tasks" fetchPlan="_base">
+                    <property name="type" fetchPlan="_instance_name"/>
+                </property>
+                <property name="participants" fetchPlan="_base">
+                    <property name="role" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
+            <collection id="tasksDc" property="tasks"/>
+            <collection id="participantsDc" property="participants"/>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="projectDc">
+            <textField id="nameField" property="name"/>
+            <textArea id="descriptionField" height="9.5em" property="description"/>
+            <entityPicker id="clientField" property="client">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <select id="statusField" property="status"/>
+        </formLayout>
+
+        <h4 text="msg://com.company.timesheets.entity/Project.tasks"/>
+        <hbox id="tasksButtonsPanel" classNames="buttons-panel">
+            <button id="taskCreateBtn" action="tasksDataGrid.create"/>
+            <button id="taskEditBtn" action="tasksDataGrid.edit"/>
+            <button id="taskRemoveBtn" action="tasksDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="tasksDataGrid"
+                  dataContainer="tasksDc"
+                  width="100%">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="name"/>
+                <column property="type"/>
+                <column property="status"/>
+                <column property="description" flexGrow="2"/>
+            </columns>
+        </dataGrid>
+
+        <h4 text="msg://com.company.timesheets.entity/Project.participants"/>
+        <hbox id="participantsButtonsPanel" classNames="buttons-panel">
+            <button id="participantCreateBtn" action="participantsDataGrid.create"/>
+            <button id="participantEditBtn" action="participantsDataGrid.edit"/>
+            <button id="participantRemoveBtn" action="participantsDataGrid.remove"/>
+        </hbox>
+        <dataGrid id="participantsDataGrid"
+                  dataContainer="participantsDc"
+                  width="100%">
+            <actions>
+                <action id="create" type="list_create">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="edit" type="list_edit">
+                    <properties>
+                        <property name="openMode" value="DIALOG"/>
+                    </properties>
+                </action>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns>
+                <column property="user"/>
+                <column property="role"/>
+            </columns>
+        </dataGrid>
+
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://jmix.io/schema/flowui/menu">
+
+    <menu id="application" title="msg://com.company.timesheets/menu.application.title" opened="true">
+        <item view="ts_TaskType.list" title="msg://com.company.timesheets.view.tasktype/taskTypeListView.title"/>
+        <item view="ts_ProjectRole.list" title="msg://com.company.timesheets.view.projectrole/projectRoleListView.title"/>
+        <item view="ts_Client.list" title="msg://com.company.timesheets.view.client/clientListView.title"/>
+        <item view="ts_Project.list" title="msg://com.company.timesheets.view.project/projectListView.title"/>
+        <item view="ts_TimeEntry.list" title="msg://com.company.timesheets.view.timeentry/timeEntryListView.title"/>
+        <item view="ts_User.list" title="msg://com.company.timesheets.view.user/UserListView.title"/>
+    </menu>
+
+</menu-config>

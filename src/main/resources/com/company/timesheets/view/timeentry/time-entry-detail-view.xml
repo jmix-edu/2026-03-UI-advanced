@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://timeEntryDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="timeEntryDc"
+                  class="com.company.timesheets.entity.TimeEntry">
+            <fetchPlan extends="_base">
+                <property name="user" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form"
+                    dataContainer="timeEntryDc">
+            <datePicker id="dateField" property="date"/>
+            <entityPicker id="userField" property="user">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="taskField" property="task">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <textField id="spentTimeField" property="spentTime"/>
+            <select id="statusField" property="status"/>
+            <textArea id="descriptionField" property="description"
+                      height="9.5em"/>
+            <textArea id="rejectionReasonField" property="rejectionReason"
+                      height="9.5em"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

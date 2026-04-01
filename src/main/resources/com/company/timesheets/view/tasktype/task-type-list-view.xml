@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://taskTypeListView.title">
+<!--      focusComponent="nameFilterField">-->
+    <data readOnly="true">
+        <collection id="taskTypesDc"
+                    class="com.company.timesheets.entity.TaskType">
+            <fetchPlan extends="_base"/>
+            <loader id="taskTypesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_TaskType e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <pagination component="pagination"/>
+            <genericFilter component="genericFilter"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="taskTypesDl">
+            <properties include=".*"/>
+        </genericFilter>
+
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createBtn" action="taskTypesDataGrid.create"/>
+            <button id="editBtn" action="taskTypesDataGrid.edit"/>
+            <button id="removeBtn" action="taskTypesDataGrid.remove"/>
+            <simplePagination id="pagination" dataLoader="taskTypesDl"/>
+        </hbox>
+        <dataGrid id="taskTypesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="taskTypesDc">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="name"/>
+                <column property="description"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

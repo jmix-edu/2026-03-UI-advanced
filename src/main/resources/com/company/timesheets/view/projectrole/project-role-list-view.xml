@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://projectRoleListView.title">
+<!--      focusComponent="nameFilterField">-->
+    <data readOnly="true">
+        <collection id="projectRolesDc"
+                    class="com.company.timesheets.entity.ProjectRole">
+            <fetchPlan extends="_base"/>
+            <loader id="projectRolesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_ProjectRole e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <pagination component="pagination"/>
+            <genericFilter component="genericFilter"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="projectRolesDl">
+            <properties include=".*"/>
+        </genericFilter>
+
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createBtn" action="projectRolesDataGrid.create"/>
+            <button id="editBtn" action="projectRolesDataGrid.edit"/>
+            <button id="removeBtn" action="projectRolesDataGrid.remove"/>
+            <simplePagination id="pagination" dataLoader="projectRolesDl"/>
+        </hbox>
+        <dataGrid id="projectRolesDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="projectRolesDc">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="remove" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="name"/>
+                <column property="type"/>
+                <column property="description"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://projectParticipantDetailView.title"
+      focusComponent="form">
+    <data>
+        <instance id="projectParticipantDc"
+                  class="com.company.timesheets.entity.ProjectParticipant">
+            <fetchPlan extends="_base">
+                <property name="project" fetchPlan="_base"/>
+                <property name="role" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+        </instance>
+        <collection id="projectRolesDc"
+                    class="com.company.timesheets.entity.ProjectRole">
+            <fetchPlan extends="_base"/>
+            <loader id="projectRolesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_ProjectRole e order by e.name]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form"
+                    dataContainer="projectParticipantDc">
+            <entityPicker id="userField" property="user">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityPicker id="projectField" property="project">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityPicker>
+            <entityComboBox id="roleField" property="role"
+                            itemsContainer="projectRolesDc">
+                <actions>
+                    <action id="entityLookup" type="entity_lookup"/>
+                    <action id="entityClear" type="entity_clear"/>
+                </actions>
+            </entityComboBox>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

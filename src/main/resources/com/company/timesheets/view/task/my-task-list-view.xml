@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://myTaskListView.title"
+      focusComponent="tasksDataGrid">
+    <data>
+        <collection id="tasksDc"
+                    class="com.company.timesheets.entity.Task">
+            <fetchPlan extends="_base">
+                <property name="type" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader id="tasksDl" readOnly="true">
+                <query>
+                    <![CDATA[
+                        select e from ts_Task e
+                        where e.project.status = @enum(com.company.timesheets.entity.ProjectStatus.OPEN)
+                              and e.status = @enum(com.company.timesheets.entity.TaskStatus.ACTIVE)
+                              and (select pp from ts_ProjectParticipant pp where pp.user.username = :current_user_username) MEMBER OF e.project.participants
+                        order by e.project.name asc, e.name asc
+                    ]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <actions>
+        <action id="selectAction" type="lookup_select"/>
+        <action id="discardAction" type="lookup_discard"/>
+    </actions>
+    <layout>
+        <genericFilter id="genericFilter"
+                       dataLoader="tasksDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="readBtn" action="tasksDataGrid.read"/>
+            <simplePagination id="pagination" dataLoader="tasksDl"/>
+        </hbox>
+        <dataGrid id="tasksDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="tasksDc"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="read" type="list_read"/>
+            </actions>
+            <columns resizable="true">
+                <column property="project"/>
+                <column property="name"/>
+                <column property="type"/>
+                <column property="description" flexGrow="2"/>
+            </columns>
+        </dataGrid>
+        <hbox id="lookupActions" visible="false">
+            <button id="selectBtn" action="selectAction"/>
+            <button id="discardBtn" action="discardAction"/>
+        </hbox>
+    </layout>
+</view>
