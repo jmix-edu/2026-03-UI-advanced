@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://myTimeEntryListView.title">
+    <data>
+        <collection id="timeEntriesDc" class="com.company.timesheets.entity.TimeEntry">
+            <loader id="timeEntriesDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_TimeEntry e where e.user.username = :current_user_username]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base"/>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <layout>
+        <genericFilter dataLoader="timeEntriesDl">
+            <properties include=".*"/>
+        </genericFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <button id="createBtn" action="timeEntriesDataGrid.create"/>
+            <button id="editBtn" action="timeEntriesDataGrid.edit"/>
+            <button id="removeBtn" action="timeEntriesDataGrid.remove"/>
+            <button id="copyBtn" action="timeEntriesDataGrid.copy"/>
+            <simplePagination id="pagination" dataLoader="timeEntriesDl"/>
+        </hbox>
+        <dataGrid id="timeEntriesDataGrid"
+                  dataContainer="timeEntriesDc"
+                  width="100%"
+                  columnReorderingAllowed="true">
+            <actions>
+                <action id="create" type="list_create"/>
+                <action id="edit" type="list_edit"/>
+                <action id="remove" type="list_remove"/>
+                <action id="copy" text="msg://copyAction.text" icon="COPY_O" type="list_itemTracking"/>
+            </actions>
+            <columns resizable="true">
+                <column property="date" autoWidth="true" flexGrow="0"/>
+                <column property="task"/>
+                <column property="spentTime" autoWidth="true" flexGrow="0"/>
+                <column property="status" autoWidth="true" flexGrow="0"/>
+                <column property="description" flexGrow="2"/>
+                <column property="rejectionReason" flexGrow="2"/>
+            </columns>
+        </dataGrid>
+    </layout>
+</view>

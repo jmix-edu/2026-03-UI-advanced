@@ -20,7 +20,9 @@
         <formLayout id="form" dataContainer="projectRoleDc">
             <textField id="nameField" property="name"/>
             <select id="typeField" property="type"/>
-            <textArea id="descriptionField" height="9.5em" property="description"/>
+            <textArea id="descriptionField"
+                      height="9.5em"
+                      property="description" colspan="2"/>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

@@ -18,16 +18,65 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="clientDc">
-            <textField id="nameField" property="name"/>
-            <fileUploadField id="imageField" property="image" fileNameVisible="true"/>
+        <vbox id="imageWrapper"
+              classNames="border border-contrast-20 rounded-m"
+              alignItems="CENTER"
+              width="100%"
+              maxWidth="30em">
+            <image id="image"
+                   height="10em"
+                   dataContainer="clientDc"
+                   property="image"
+                   alternateText="msg://com.company.timesheets.entity/Client.image"/>
+            <hbox id="uploadWrapper"
+                  expand="imageUpload"
+                  width="100%">
+                <fileUploadField id="imageUpload"
+                                 dataContainer="clientDc"
+                                 property="image"
+                                 uploadIcon="UPLOAD_ALT"/>
+                <button id="uploadClearBtn" icon="CLOSE_BIG">
+                    <tooltip text="msg://uploadClearBtn.tooltip"/>
+                </button>
+            </hbox>
+        </vbox>
 
-            <emailField id="emailField" dataContainer="contactInformationDc" property="email"/>
-            <textField id="phoneField" dataContainer="contactInformationDc" property="phone"/>
-            <textField id="urlField" dataContainer="contactInformationDc" property="url"/>
-            <textArea id="addressField" dataContainer="contactInformationDc" property="address"
-                      height="9.5em"/>
-        </formLayout>
+        <textField id="nameField" dataContainer="clientDc" property="name"/>
+
+        <hr/>
+
+        <details id="ciDetails"
+                 summaryText="msg://ciDetails.summaryText"
+                 width="100%"
+                 opened="true">
+            <formLayout id="ciForm" dataContainer="contactInformationDc">
+                <responsiveSteps>
+                    <responsiveStep minWidth="0" columns="1"/>
+                    <responsiveStep minWidth="60em" columns="3"/>
+                </responsiveSteps>
+                <emailField id="emailField" property="email">
+                    <prefix>
+                        <icon icon="ENVELOPE"/>
+                    </prefix>
+                </emailField>
+                <textField id="phoneField" property="phone">
+                    <prefix>
+                        <icon icon="PHONE_LANDLINE"/>
+                    </prefix>
+                </textField>
+                <textField id="urlField" property="url">
+                    <prefix>
+                        <icon icon="LINK"/>
+                    </prefix>
+                </textField>
+                <textArea id="addressField" property="address"
+                          height="9.5em" colspan="3">
+                    <prefix>
+                        <icon icon="MAP_MARKER"/>
+                    </prefix>
+                </textArea>
+            </formLayout>
+        </details>
 
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>
