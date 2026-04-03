@@ -49,13 +49,13 @@
                 <action id="remove" type="list_remove"/>
             </actions>
             <columns resizable="true">
-                <column property="date"/>
+                <column property="date" autoWidth="true" flexGrow="0"/>
                 <column property="task"/>
                 <column property="user"/>
-                <column property="spentTime"/>
-                <column property="status"/>
-                <column property="description"/>
-                <column property="rejectionReason"/>
+                <column property="spentTime" autoWidth="true" flexGrow="0"/>
+                <column property="status" autoWidth="true" flexGrow="0"/>
+                <column property="description" flexGrow="2"/>
+                <column property="rejectionReason" flexGrow="2"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

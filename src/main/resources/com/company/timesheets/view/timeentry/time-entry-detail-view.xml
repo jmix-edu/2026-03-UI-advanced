@@ -10,6 +10,19 @@
             </fetchPlan>
             <loader/>
         </instance>
+        <collection id="tasksDc" class="com.company.timesheets.entity.Task">
+            <loader id="tasksDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_Task e
+                        where e.project.status = @enum(com.company.timesheets.entity.ProjectStatus.OPEN)
+                        and e.status = @enum(com.company.timesheets.entity.TaskStatus.ACTIVE)
+                        and (select pp from ts_ProjectParticipant pp where pp.user.username = :username) MEMBER OF e.project.participants
+                        order by e.project.name asc, e.name asc
+]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base"/>
+        </collection>
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
@@ -21,25 +34,51 @@
     <layout>
         <formLayout id="form"
                     dataContainer="timeEntryDc">
-            <datePicker id="dateField" property="date"/>
+            <datePicker id="dateField" property="date">
+                <prefix>
+                    <icon icon="CALENDAR"/>
+                </prefix>
+            </datePicker>
             <entityPicker id="userField" property="user">
+                <prefix>
+                    <icon icon="USER"/>
+                </prefix>
                 <actions>
+                    <action id="assignSelf" icon="USER_CHECK" text="msg://assignSelf.text"/>
                     <action id="entityLookup" type="entity_lookup"/>
                     <action id="entityClear" type="entity_clear"/>
                 </actions>
             </entityPicker>
-            <entityPicker id="taskField" property="task">
+            <entityComboBox id="taskField"
+                            itemsContainer="tasksDc"
+                            property="task">
+                <prefix>
+                    <icon icon="FILE_TEXT_O"/>
+                </prefix>
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>
                     <action id="entityClear" type="entity_clear"/>
                 </actions>
-            </entityPicker>
-            <textField id="spentTimeField" property="spentTime"/>
+            </entityComboBox>
+            <textField id="spentTimeField" property="spentTime"
+                       placeholder="msg://spentTimeField.placeholder">
+                <prefix>
+                    <icon icon="CLOCK"/>
+                </prefix>
+            </textField>
             <select id="statusField" property="status"/>
             <textArea id="descriptionField" property="description"
-                      height="9.5em"/>
+                      height="9.5em" colspan="2">
+                <prefix>
+                    <icon icon="COMMENT_O"/>
+                </prefix>
+            </textArea>
             <textArea id="rejectionReasonField" property="rejectionReason"
-                      height="9.5em"/>
+                      height="9.5em" colspan="2" required="true">
+                <prefix>
+                    <icon icon="EXCLAMATION_CIRCLE_O"/>
+                </prefix>
+            </textArea>
         </formLayout>
         <hbox id="detailActions">
             <button id="saveAndCloseBtn" action="saveAction"/>

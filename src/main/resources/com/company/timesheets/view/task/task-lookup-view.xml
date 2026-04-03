@@ -11,7 +11,19 @@
             </fetchPlan>
             <loader id="tasksDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from ts_Task e order by e.project.name asc, e.name asc]]>
+                    <![CDATA[select e from ts_Task e
+                     where e.project.status = @enum(com.company.timesheets.entity.ProjectStatus.OPEN)
+                           and e.status = @enum(com.company.timesheets.entity.TaskStatus.ACTIVE)
+                     order by e.project.name asc, e.name asc]]>
+                    <condition>
+                        <and>
+                            <c:jpql>
+                                <c:where>
+                                    (select pp from ts_ProjectParticipant pp where pp.user = :user) MEMBER OF e.project.participants
+                                </c:where>
+                            </c:jpql>
+                        </and>
+                    </condition>
                 </query>
             </loader>
         </collection>

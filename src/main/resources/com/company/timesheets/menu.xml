@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <menu-config xmlns="http://jmix.io/schema/flowui/menu">
 
-    <menu id="application" title="msg://com.company.timesheets/menu.application.title" opened="true">
-        <item view="ts_TaskType.list" title="msg://com.company.timesheets.view.tasktype/taskTypeListView.title"/>
-        <item view="ts_ProjectRole.list" title="msg://com.company.timesheets.view.projectrole/projectRoleListView.title"/>
+    <menu opened="true" id="timesheets" description="msg://com.company.timesheets/menu_config.timesheets.description"
+          title="msg://com.company.timesheets/menu_config.timesheets.title">
+        <item view="ts_TimeEntry.my"
+              title="msg://com.company.timesheets.view.mytimeentrylist/myTimeEntryListView.title"/>
+        <item view="ts_Task.my" description="msg://com.company.timesheets/menu_config.ts_Task.my.description"
+              title="msg://com.company.timesheets/menu_config.ts_Task.my.title"/>
+    </menu>
+    <menu opened="true" id="projects" description="msg://com.company.timesheets/menu_config.projects.description"
+          title="msg://com.company.timesheets/menu_config.projects.title">
         <item view="ts_Client.list" title="msg://com.company.timesheets.view.client/clientListView.title"/>
         <item view="ts_Project.list" title="msg://com.company.timesheets.view.project/projectListView.title"/>
         <item view="ts_TimeEntry.list" title="msg://com.company.timesheets.view.timeentry/timeEntryListView.title"/>
-        <item view="ts_User.list" title="msg://com.company.timesheets.view.user/UserListView.title"/>
-        <item view="ts_TimeEntry.my"
-              title="msg://com.company.timesheets.view.mytimeentrylist/myTimeEntryListView.title"/>
     </menu>
-
+    <menu id="settings" title="msg://com.company.timesheets/menu.application.title">
+        <item view="ts_TaskType.list" title="msg://com.company.timesheets.view.tasktype/taskTypeListView.title"/>
+        <item view="ts_ProjectRole.list"
+              title="msg://com.company.timesheets.view.projectrole/projectRoleListView.title"/>
+    </menu>
+    <separator/>
+    <menu id="administration" description="msg://com.company.timesheets/menu_config.administration.description"
+          title="msg://com.company.timesheets/menu_config.administration.title">
+        <menu id="security" title="msg://com.company.timesheets/menu.security.title">
+            <item view="ts_User.list" title="msg://com.company.timesheets.view.user/UserListView.title"/>
+            <item view="sec_ResourceRoleModel.list"
+                  title="msg://io.jmix.securityflowui.view.resourcerole/resourceRoleModelListView.menu"/>
+            <item view="sec_RowLevelRoleModel.list"
+                  title="msg://io.jmix.securityflowui.view.rowlevelrole/rowLevelRoleModelListView.menu"/>
+        </menu>
+        <menu id="datatools" title="msg://com.company.timesheets/menu.datatools.title">
+            <item view="datatl_entityInspectorListView"
+                  title="msg://io.jmix.datatoolsflowui.view.entityinspector/listTitle"/>
+        </menu>
+    </menu>
 </menu-config>

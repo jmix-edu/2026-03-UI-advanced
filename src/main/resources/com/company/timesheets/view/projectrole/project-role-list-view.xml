@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <view xmlns="http://jmix.io/schema/flowui/view"
       title="msg://projectRoleListView.title">
-<!--      focusComponent="nameFilterField">-->
+    <!--      focusComponent="nameFilterField">-->
     <data readOnly="true">
         <collection id="projectRolesDc"
                     class="com.company.timesheets.entity.ProjectRole">
@@ -17,7 +17,8 @@
         <dataLoadCoordinator auto="true"/>
         <urlQueryParameters>
             <pagination component="pagination"/>
-            <genericFilter component="genericFilter"/>
+            <propertyFilter component="nameFilter"/>
+            <propertyFilter component="typeFilter"/>
         </urlQueryParameters>
     </facets>
     <actions>
@@ -25,10 +26,36 @@
         <action id="discardAction" type="lookup_discard"/>
     </actions>
     <layout>
-        <genericFilter id="genericFilter"
-                       dataLoader="projectRolesDl">
-            <properties include=".*"/>
-        </genericFilter>
+        <formLayout id="filterLayout">
+            <propertyFilter id="nameFilter"
+                            property="name"
+                            operation="CONTAINS"
+                            dataLoader="projectRolesDl"
+                            labelVisible="false">
+                <textField id="nameFilterField"
+                           placeholder="msg://nameFilterField.placeholder"
+                           clearButtonVisible="true">
+                    <prefix>
+                        <icon icon="SEARCH"/>
+                    </prefix>
+                </textField>
+            </propertyFilter>
+
+            <propertyFilter id="typeFilter"
+                            property="type"
+                            operation="EQUAL"
+                            dataLoader="projectRolesDl" labelVisible="false">
+                <select id="typeFilterField"
+                        itemsEnum="com.company.timesheets.entity.ProjectRoleType"
+                        emptySelectionAllowed="true"
+                        emptySelectionCaption="msg://typeFilterField.emptySelectionCaption"
+                        placeholder="msg://typeFilterField.placeholder">
+                    <prefix>
+                        <icon icon="SEARCH"/>
+                    </prefix>
+                </select>
+            </propertyFilter>
+        </formLayout>
 
         <hbox id="buttonsPanel" classNames="buttons-panel">
             <button id="createBtn" action="projectRolesDataGrid.create"/>
@@ -47,8 +74,8 @@
             </actions>
             <columns resizable="true">
                 <column property="name"/>
-                <column property="type"/>
-                <column property="description"/>
+                <column property="type" autoWidth="true" flexGrow="0"/>
+                <column property="description" flexGrow="2"/>
             </columns>
         </dataGrid>
         <hbox id="lookupActions" visible="false">

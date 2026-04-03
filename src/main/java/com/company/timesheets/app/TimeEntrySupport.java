@@ -27,6 +27,7 @@ public class TimeEntrySupport {
         TimeEntry copied = metadataTools.copy(reloaded);
         copied.setId(UuidProvider.createUuid());
         copied.setStatus(TimeEntryStatus.NEW);
+        copied.setDate(null);
         return copied;
     }
 }
