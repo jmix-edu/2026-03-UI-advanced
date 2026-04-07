@@ -5,6 +5,7 @@ import com.company.timesheets.entity.Task;
 import com.company.timesheets.entity.TimeEntry;
 import com.company.timesheets.entity.User;
 import com.company.timesheets.view.main.MainView;
+import com.company.timesheets.view.timeentry.TimeEntryDetailView;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.AccessManager;
 import io.jmix.core.DataManager;
@@ -44,11 +45,13 @@ public class MyTaskListView extends StandardListView<Task> {
         }
 
         TimeEntry newEntry = dataManager.create(TimeEntry.class);
-        newEntry.setUser((User) currentUserSubstitution.getEffectiveUser());
         newEntry.setTask(selectedTask);
 
         dialogWindows.detail(this, TimeEntry.class)
+                .withViewClass(TimeEntryDetailView.class)
                 .newEntity(newEntry)
+                .withViewConfigurer(timeEntryDetailView ->
+                        timeEntryDetailView.setOwnTimeEntry(true))
                 .open();
     }
 

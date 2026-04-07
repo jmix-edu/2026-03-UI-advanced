@@ -12,6 +12,7 @@
           title="msg://com.company.timesheets/menu_config.projects.title">
         <item view="ts_Client.list" title="msg://com.company.timesheets.view.client/clientListView.title"/>
         <item view="ts_Project.list" title="msg://com.company.timesheets.view.project/projectListView.title"/>
+        <item view="ts_Document.list" title="msg://com.company.timesheets.view.document/documentListView.title"/>
         <item view="ts_TimeEntry.list" title="msg://com.company.timesheets.view.timeentry/timeEntryListView.title"/>
     </menu>
     <menu id="settings" title="msg://com.company.timesheets/menu.application.title">
@@ -22,6 +23,7 @@
     <separator/>
     <menu id="administration" description="msg://com.company.timesheets/menu_config.administration.description"
           title="msg://com.company.timesheets/menu_config.administration.title">
+        <item view="jmxcon_JmxConsoleView" title="msg://io.jmix.jmxconsole/jmxConsoleView.menu"/>
         <menu id="security" title="msg://com.company.timesheets/menu.security.title">
             <item view="ts_User.list" title="msg://com.company.timesheets.view.user/UserListView.title"/>
             <item view="sec_ResourceRoleModel.list"

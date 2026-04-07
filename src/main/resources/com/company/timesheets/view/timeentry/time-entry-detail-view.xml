@@ -39,7 +39,7 @@
                     <icon icon="CALENDAR"/>
                 </prefix>
             </datePicker>
-            <entityPicker id="userField" property="user">
+            <entityPicker id="userField" property="user" readOnly="true">
                 <prefix>
                     <icon icon="USER"/>
                 </prefix>

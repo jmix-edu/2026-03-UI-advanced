@@ -8,6 +8,7 @@ import com.company.timesheets.view.main.MainView;
 import com.company.timesheets.view.task.TaskLookupView;
 import com.vaadin.flow.router.Route;
 import io.jmix.core.security.CurrentAuthentication;
+import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.component.combobox.EntityComboBox;
 import io.jmix.flowui.component.textarea.JmixTextArea;
@@ -37,6 +38,23 @@ public class TimeEntryDetailView extends StandardDetailView<TimeEntry> {
     private DialogWindows dialogWindows;
     @ViewComponent
     private EntityPicker<User> userField;
+    
+    public static final String PARAMETER_OWN_TIME_ENTRY = "ownTimeEntry";
+    
+    private boolean ownTimeEntry = false;
+    @Autowired
+    private CurrentUserSubstitution currentUserSubstitution;
+
+    public void setOwnTimeEntry(boolean ownTimeEntry) {
+        this.ownTimeEntry = ownTimeEntry;
+    }
+
+    @Subscribe
+    public void onQueryParametersChange(final QueryParametersChangeEvent event) {
+        ownTimeEntry = event.getQueryParameters()
+                .getSingleParameter(PARAMETER_OWN_TIME_ENTRY)
+                .isPresent();
+    }
 
     @Subscribe("userField.assignSelf")
     public void onUserFieldAssignSelf(final ActionPerformedEvent event) {
@@ -59,6 +77,9 @@ public class TimeEntryDetailView extends StandardDetailView<TimeEntry> {
             taskField.setReadOnly(getEditedEntity().getUser() == null);
             loadTasks();
         }
+        if ("task".equals(event.getProperty()) && !ownTimeEntry) {
+            userField.setReadOnly(getEditedEntity().getTask() != null);
+        }
     }
 
     private void updateRejectionReasonField() {
@@ -78,8 +99,18 @@ public class TimeEntryDetailView extends StandardDetailView<TimeEntry> {
             newEntry.setDate(LocalDate.now());
         }
 
-        taskField.setReadOnly(newEntry.getUser() == null || newEntry.getTask() != null);
-        userField.setReadOnly(newEntry.getUser() != null);
+        if (newEntry.getUser() == null) {
+            if (ownTimeEntry) {
+                final User user = (User) currentUserSubstitution.getEffectiveUser();
+                newEntry.setUser(user);
+            } else {
+                userField.setReadOnly(false);
+                taskField.setReadOnly(true);
+            }
+        } else {
+            taskField.setReadOnly(newEntry.getTask() != null);
+        }
+
     }
 
     @Subscribe("taskField.entityLookup")
@@ -91,4 +122,5 @@ public class TimeEntryDetailView extends StandardDetailView<TimeEntry> {
         dialogWindow.getView().setFilterUser(getEditedEntity().getUser());
         dialogWindow.open();
     }
+    
 }

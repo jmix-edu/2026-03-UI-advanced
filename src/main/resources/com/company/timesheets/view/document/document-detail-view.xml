@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://documentDetailView.title"
+      focusComponent="nameField">
+    <data>
+        <instance id="documentDc"
+                  class="com.company.timesheets.entity.Document">
+            <fetchPlan extends="_base"/>
+            <loader/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="saveAction" type="detail_saveClose"/>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form" dataContainer="documentDc">
+            <textField id="nameField" property="name"/>
+            <textArea id="descriptionField"
+                      property="description"
+                      colspan="2"
+                      height="10em"/>
+            <hbox id="attachmentBox"
+                  colspan="2"
+                  width="100%"
+                  alignItems="END"
+                  expand="attachmentField">
+                <fileStorageUploadField id="attachmentField"
+                                        property="attachment"
+                                        fileNameVisible="true"
+                                        fileStoragePutMode="MANUAL"
+                                        clearButtonVisible="false"
+                                        dataContainer="documentDc"
+                                        acceptedFileTypes=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"/>
+                <button id="clearAttachmentBtn" icon="CLOSE_BIG">
+                    <tooltip text="msg://clearAttachmentBtn.tooltip"/>
+                </button>
+            </hbox>
+            <textField id="pendingUploadField"
+                       label="msg://pendingUploadField.label"
+                       readOnly="true"
+                       colspan="2"
+                       visible="false"/>
+        </formLayout>
+        <hbox id="detailActions">
+            <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

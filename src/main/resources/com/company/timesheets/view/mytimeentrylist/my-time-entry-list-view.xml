@@ -13,9 +13,15 @@
     </data>
     <facets>
         <dataLoadCoordinator auto="true"/>
+        <urlQueryParameters>
+            <genericFilter component="genericFilter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+        <timer id="timer" delay="1000" repeating="true"/>
+        <settings auto="true"/>
     </facets>
     <layout>
-        <genericFilter dataLoader="timeEntriesDl">
+        <genericFilter id="genericFilter" dataLoader="timeEntriesDl">
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" classNames="buttons-panel">
@@ -23,6 +29,8 @@
             <button id="editBtn" action="timeEntriesDataGrid.edit"/>
             <button id="removeBtn" action="timeEntriesDataGrid.remove"/>
             <button id="copyBtn" action="timeEntriesDataGrid.copy"/>
+            <button id="startBtn" text="Start"/>
+            <button id="stopBtn" text="Stop"/>
             <simplePagination id="pagination" dataLoader="timeEntriesDl"/>
         </hbox>
         <dataGrid id="timeEntriesDataGrid"

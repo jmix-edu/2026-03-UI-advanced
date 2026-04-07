@@ -25,6 +25,14 @@
         </urlQueryParameters>
     </facets>
     <layout>
+
+        <vbox>
+            <button id="performWithoutResultBtn" text="Perform without result"/>
+
+            <textField id="inputField" clearButtonVisible="true"/>
+            <button id="performChangesBtn" text="Perform with result"/>
+        </vbox>
+
         <genericFilter id="genericFilter"
                        dataLoader="usersDl">
             <properties include=".*"/>
@@ -42,6 +50,7 @@
                         <actionItem id="showUserSubstitutionsItem" ref="usersDataGrid.showUserSubstitutionsAction"/>
                     </items>
                 </dropdownButton>
+                <button id="sendEmailButton" action="usersDataGrid.sendEmail"/>
             </startSlot>
             <endSlot>
                 <simplePagination id="pagination" dataLoader="usersDl"/>
@@ -60,6 +69,7 @@
                 <action id="changePasswordAction" type="sec_changePassword"/>
                 <action id="resetPasswordAction" type="sec_resetPassword"/>
                 <action id="showUserSubstitutionsAction" type="sec_showUserSubstitutions"/>
+                <action id="sendEmail" text="msg://sendEmail.text" icon="PAPERPLANE_O"/>
             </actions>
             <columns resizable="true">
                 <column property="username"/>
