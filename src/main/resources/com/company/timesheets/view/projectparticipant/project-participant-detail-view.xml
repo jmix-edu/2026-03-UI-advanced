@@ -8,9 +8,18 @@
             <fetchPlan extends="_base">
                 <property name="project" fetchPlan="_base"/>
                 <property name="role" fetchPlan="_base"/>
+                <property name="user" fetchPlan="_base"/>
             </fetchPlan>
             <loader/>
         </instance>
+        <collection id="usersDc" class="com.company.timesheets.entity.User">
+            <loader id="usersDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_User e]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base"/>
+        </collection>
         <collection id="projectRolesDc"
                     class="com.company.timesheets.entity.ProjectRole">
             <fetchPlan extends="_base"/>
@@ -31,12 +40,15 @@
     <layout>
         <formLayout id="form"
                     dataContainer="projectParticipantDc">
-            <entityPicker id="userField" property="user">
+            <entityComboBox id="usersComboBox"
+                            itemsContainer="usersDc"
+                            property="user"
+                            dataContainer="projectParticipantDc">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>
                     <action id="entityClear" type="entity_clear"/>
                 </actions>
-            </entityPicker>
+            </entityComboBox>
             <entityPicker id="projectField" property="project">
                 <actions>
                     <action id="entityLookup" type="entity_lookup"/>

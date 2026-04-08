@@ -1,6 +1,8 @@
 package com.company.timesheets.view.main;
 
+import com.company.timesheets.entity.TimeEntry;
 import com.company.timesheets.entity.User;
+import com.company.timesheets.event.TimeEntryStatusChangedEvent;
 import com.google.common.base.Strings;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.avatar.Avatar;
@@ -8,14 +10,17 @@ import com.vaadin.flow.component.avatar.AvatarVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.router.Route;
+import io.jmix.core.DataManager;
+import io.jmix.core.LoadContext;
 import io.jmix.core.Messages;
+import io.jmix.core.Metadata;
 import io.jmix.core.usersubstitution.CurrentUserSubstitution;
 import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.app.main.StandardMainView;
-import io.jmix.flowui.view.Install;
-import io.jmix.flowui.view.ViewController;
-import io.jmix.flowui.view.ViewDescriptor;
+import io.jmix.flowui.component.main.JmixListMenu;
+import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Route("")
@@ -29,6 +34,12 @@ public class MainView extends StandardMainView {
     private UiComponents uiComponents;
     @Autowired
     private CurrentUserSubstitution currentUserSubstitution;
+    @Autowired
+    private Metadata metadata;
+    @Autowired
+    private DataManager dataManager;
+    @ViewComponent
+    private JmixListMenu menu;
 
     @Install(to = "userMenu", subject = "buttonRenderer")
     private Component userMenuButtonRenderer(final UserDetails userDetails) {
@@ -114,5 +125,31 @@ public class MainView extends StandardMainView {
     private boolean isSubstituted(User user) {
         UserDetails authenticatedUser = currentUserSubstitution.getAuthenticatedUser();
         return user != null && !authenticatedUser.getUsername().equals(user.getUsername());
+    }
+
+    @Subscribe
+    public void onInit(final InitEvent event) {
+        updateRejectedTimeEntries();
+    }
+
+    @EventListener
+    private void timeEntryStatusChanged(TimeEntryStatusChangedEvent event) {
+        updateRejectedTimeEntries();
+    }
+
+    private void updateRejectedTimeEntries() {
+        LoadContext<TimeEntry> loadContext = new LoadContext<>(metadata.getClass(TimeEntry.class));
+        loadContext.setQueryString("select te from ts_TimeEntry te " +
+                "where te.user.username = :current_user_username " +
+                "and te.status = @enum(com.company.timesheets.entity.TimeEntryStatus.REJECTED)");
+
+        long count = dataManager.getCount(loadContext);
+
+        Span badge = null;
+        if (count > 0) {
+            badge = new Span("" + count);
+            badge.getElement().getThemeList().add("badge error");
+        }
+        menu.getMenuItem("ts_TimeEntry.my").setSuffixComponent(badge);
     }
 }

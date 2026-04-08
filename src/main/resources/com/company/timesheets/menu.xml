@@ -7,6 +7,7 @@
               title="msg://com.company.timesheets.view.mytimeentrylist/myTimeEntryListView.title"/>
         <item view="ts_Task.my" description="msg://com.company.timesheets/menu_config.ts_Task.my.description"
               title="msg://com.company.timesheets/menu_config.ts_Task.my.title"/>
+        <item view="ts_Client_only.list" title="msg://com.company.timesheets.view.client/clientListOnlyView.title"/>
     </menu>
     <menu opened="true" id="projects" description="msg://com.company.timesheets/menu_config.projects.description"
           title="msg://com.company.timesheets/menu_config.projects.title">
@@ -26,10 +27,11 @@
         <item view="jmxcon_JmxConsoleView" title="msg://io.jmix.jmxconsole/jmxConsoleView.menu"/>
         <menu id="security" title="msg://com.company.timesheets/menu.security.title">
             <item view="ts_User.list" title="msg://com.company.timesheets.view.user/UserListView.title"/>
-            <item view="sec_ResourceRoleModel.list"
-                  title="msg://io.jmix.securityflowui.view.resourcerole/resourceRoleModelListView.menu"/>
             <item view="sec_RowLevelRoleModel.list"
                   title="msg://io.jmix.securityflowui.view.rowlevelrole/rowLevelRoleModelListView.menu"/>
+            <item view="sec_ResourceRoleModel.list"
+                  description="msg://com.company.timesheets/menu_config.sec_ResourceRoleModel.list.description"
+                  title="msg://com.company.timesheets/menu_config.sec_ResourceRoleModel.list.title"/>
         </menu>
         <menu id="datatools" title="msg://com.company.timesheets/menu.datatools.title">
             <item view="datatl_entityInspectorListView"

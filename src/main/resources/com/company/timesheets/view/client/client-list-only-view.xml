@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      xmlns:c="http://jmix.io/schema/flowui/jpql-condition"
+      title="msg://clientListOnlyView.title"
+      focusComponent="clientsDataGrid">
+    <data>
+        <collection id="clientsDc"
+                    class="com.company.timesheets.entity.Client">
+            <fetchPlan extends="_base"/>
+            <loader id="clientsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_Client e]]>
+                </query>
+            </loader>
+        </collection>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <settings auto="true"/>
+        <urlQueryParameters>
+            <propertyFilter component="filter"/>
+            <pagination component="pagination"/>
+        </urlQueryParameters>
+    </facets>
+    <layout>
+        <propertyFilter id="filter"
+                        dataLoader="clientsDl" property="name"
+                        operation="CONTAINS"
+                        labelVisible="false"
+                        width="100%" maxWidth="30em">
+            <textField id="filterField"
+                       placeholder="Start typing..."
+                       clearButtonVisible="true">
+                <prefix>
+                    <icon icon="SEARCH"/>
+                </prefix>
+            </textField>
+        </propertyFilter>
+        <hbox id="buttonsPanel" classNames="buttons-panel">
+            <startSlot>
+                <button id="createButton" action="clientsDataGrid.createAction"/>
+                <button id="editButton" action="clientsDataGrid.editAction"/>
+                <button id="removeButton" action="clientsDataGrid.removeAction"/>
+            </startSlot>
+            <endSlot>
+                <simplePagination id="pagination" dataLoader="clientsDl"/>
+            </endSlot>
+        </hbox>
+        <dataGrid id="clientsDataGrid"
+                  width="100%"
+                  minHeight="20em"
+                  dataContainer="clientsDc"
+                  columnReorderingAllowed="true"
+                  selectionMode="MULTI">
+            <actions>
+                <action id="createAction" type="list_create"/>
+                <action id="editAction" type="list_edit"/>
+                <action id="removeAction" type="list_remove"/>
+            </actions>
+            <columns resizable="true">
+                <column property="name"/>
+                <column property="contactInformation.email"/>
+                <column property="contactInformation.phone"/>
+                <column property="contactInformation.address"/>
+                <column property="contactInformation.url"/>
+            </columns>
+        </dataGrid>
+    </layout>
+</view>

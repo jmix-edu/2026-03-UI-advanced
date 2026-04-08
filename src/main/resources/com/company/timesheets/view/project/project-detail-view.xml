@@ -7,17 +7,32 @@
                   class="com.company.timesheets.entity.Project">
             <fetchPlan extends="_base">
                 <property name="client" fetchPlan="_base"/>
-                <property name="tasks" fetchPlan="_base">
-                    <property name="type" fetchPlan="_instance_name"/>
-                </property>
-                <property name="participants" fetchPlan="_base">
-                    <property name="role" fetchPlan="_base"/>
-                </property>
+                <property name="tasks" fetchPlan="_base"/>
+                <property name="participants" fetchPlan="_base"/>
             </fetchPlan>
-            <collection id="tasksDc" property="tasks"/>
-            <collection id="participantsDc" property="participants"/>
             <loader/>
         </instance>
+        <collection id="tasksDc" class="com.company.timesheets.entity.Task">
+            <loader id="tasksDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_Task e where e.project = :container_projectDc]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="type" fetchPlan="_base"/>
+            </fetchPlan>
+        </collection>
+
+        <collection id="participantsDc" class="com.company.timesheets.entity.ProjectParticipant">
+            <loader id="participantsDl" readOnly="true">
+                <query>
+                    <![CDATA[select e from ts_ProjectParticipant e where e.project = :container_projectDc]]>
+                </query>
+            </loader>
+            <fetchPlan extends="_base">
+                <property name="role" fetchPlan="_base"/>
+            </fetchPlan>
+        </collection>
         <collection id="clientsDc" class="com.company.timesheets.entity.Client">
             <loader id="clientsDl" readOnly="true">
                 <query>
@@ -35,55 +50,50 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="projectDc">
-            <textField id="nameField" property="name">
-                <prefix>
-                    <icon icon="USER_CARD"/>
-                </prefix>
-            </textField>
-            <textArea id="descriptionField"
-                      height="9.5em"
-                      property="description" colspan="2">
-                <prefix>
-                    <icon icon="COMMENT_O"/>
-                </prefix>
-            </textArea>
-            <entityComboBox id="clientField"
-                            property="client"
-                            itemsContainer="clientsDc">
-                <prefix>
-                    <icon icon="USER"/>
-                </prefix>
-                <actions>
-                    <action id="entityLookup" type="entity_lookup"/>
-                    <action id="entityClear" type="entity_clear"/>
-                </actions>
-            </entityComboBox>
-            <select id="statusField" property="status"/>
-        </formLayout>
-
         <tabSheet id="tabSheet" width="100%" minHeight="30em">
-            <tab id="tasksTab" label="msg://com.company.timesheets.entity/Project.tasks">
+            <tab id="projectFormTab" label="msg://com.company.timesheets.entity/Project">
+                <formLayout id="form" dataContainer="projectDc">
+                    <textField id="nameField" property="name">
+                        <prefix>
+                            <icon icon="USER_CARD"/>
+                        </prefix>
+                    </textField>
+                    <textArea id="descriptionField"
+                              height="9.5em"
+                              property="description" colspan="2">
+                        <prefix>
+                            <icon icon="COMMENT_O"/>
+                        </prefix>
+                    </textArea>
+                    <entityComboBox id="clientField"
+                                    property="client"
+                                    itemsContainer="clientsDc">
+                        <prefix>
+                            <icon icon="USER"/>
+                        </prefix>
+                        <actions>
+                            <action id="entityLookup" type="entity_lookup"/>
+                            <action id="entityClear" type="entity_clear"/>
+                        </actions>
+                    </entityComboBox>
+                    <select id="statusField" property="status"/>
+                </formLayout>
+
+            </tab>
+            <tab id="tasksTab" label="msg://com.company.timesheets.entity/Project.tasks" lazy="true">
                 <vbox id="tasksWrapper" height="100%" padding="false">
                     <hbox id="tasksButtonsPanel" classNames="buttons-panel">
                         <button id="taskCreateBtn" action="tasksDataGrid.create"/>
                         <button id="taskEditBtn" action="tasksDataGrid.edit"/>
                         <button id="taskRemoveBtn" action="tasksDataGrid.remove"/>
+                        <simplePagination id="tasksPagination" dataLoader="tasksDl"/>
                     </hbox>
                     <dataGrid id="tasksDataGrid"
                                   dataContainer="tasksDc"
                                   width="100%">
                         <actions>
-                            <action id="create" type="list_create">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
-                            <action id="edit" type="list_edit">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
+                            <action id="create" type="list_create"/>
+                            <action id="edit" type="list_edit"/>
                             <action id="remove" type="list_remove"/>
                         </actions>
                         <columns>
@@ -95,27 +105,20 @@
                     </dataGrid>
                 </vbox>
             </tab>
-            <tab id="participantsTab" label="msg://com.company.timesheets.entity/Project.participants" >
+            <tab id="participantsTab" label="msg://com.company.timesheets.entity/Project.participants" lazy="true">
                 <vbox id="participantsWrapper" height="100%" padding="false">
                     <hbox id="participantsButtonsPanel" classNames="buttons-panel">
                         <button id="participantCreateBtn" action="participantsDataGrid.create"/>
                         <button id="participantEditBtn" action="participantsDataGrid.edit"/>
                         <button id="participantRemoveBtn" action="participantsDataGrid.remove"/>
+                        <simplePagination id="participantsPagination" dataLoader="participantsDl" />
                     </hbox>
                     <dataGrid id="participantsDataGrid"
                                   dataContainer="participantsDc"
                                   width="100%">
                         <actions>
-                            <action id="create" type="list_create">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
-                            <action id="edit" type="list_edit">
-                                <properties>
-                                    <property name="openMode" value="DIALOG"/>
-                                </properties>
-                            </action>
+                            <action id="create" type="list_create"/>
+                            <action id="edit" type="list_edit"/>
                             <action id="remove" type="list_remove"/>
                         </actions>
                         <columns>
