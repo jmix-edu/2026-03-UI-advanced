@@ -48,7 +48,7 @@
         <details id="ciDetails"
                  summaryText="msg://ciDetails.summaryText"
                  width="100%"
-                 opened="true">
+                 opened="true" themeNames="summary-filled non-collapsible bordered">
             <formLayout id="ciForm" dataContainer="contactInformationDc">
                 <responsiveSteps>
                     <responsiveStep minWidth="0" columns="1"/>
@@ -78,8 +78,9 @@
             </formLayout>
         </details>
 
-        <hbox id="detailActions">
+        <hbox id="detailActions" width="100%" expand="invisible">
             <button id="saveAndCloseBtn" action="saveAction"/>
+            <button id="invisible" themeNames="tertiary-inline"/>
             <button id="closeBtn" action="closeAction"/>
         </hbox>
     </layout>

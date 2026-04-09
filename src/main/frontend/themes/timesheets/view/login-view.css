@@ -3,3 +3,8 @@
 .jmix-login-main-layout {
   background-color: var(--lumo-shade-5pct);
 }
+
+jmix-login-form vaadin-login-form-wrapper {
+    border-radius: var(--lumo-border-radius-m);
+    box-shadow: var(--lumo-box-shadow-s);
+}

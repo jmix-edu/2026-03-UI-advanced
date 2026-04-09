@@ -11,4 +11,11 @@ import io.jmix.flowui.view.*;
 @LookupComponent("projectsDataGrid")
 @DialogMode(width = "64em")
 public class ProjectListView extends StandardListView<Project> {
+    @Install(to = "projectsDataGrid.status", subject = "partNameGenerator")
+    private String projectsDataGridStatusPartNameGenerator(final Project project) {
+        return switch (project.getStatus()) {
+            case OPEN -> "open-project";
+            case CLOSED -> "closed-project";
+        };
+    }
 }

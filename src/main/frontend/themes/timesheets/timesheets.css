@@ -1,1 +1,55 @@
 /* Define your styles here */
+
+/* Border and gradient */
+
+vaadin-button:not([theme~="tertiary-inline"]),
+vaadin-menu-bar[jmix-role~="jmix-dropdown-button"] > vaadin-menu-bar-button,
+vaadin-menu-bar[jmix-role*="jmix-combo-button"] > vaadin-menu-bar-button {
+    background-image: linear-gradient(var(--lumo-tint-5pct), var(--lumo-shade-5pct));
+    outline: 1px solid var(--lumo-contrast-20pct);
+}
+
+/* Non-collapsible details*/
+
+vaadin-details-summary[theme~='non-collapsible'] {
+    pointer-events: none;
+}
+
+vaadin-details-summary[theme~='non-collapsible']::part(toggle) {
+    display: none;
+}
+
+/* Summary filled */
+
+vaadin-details-summary[theme~='summary-filled'] {
+    background-color: var(--lumo-contrast-5pct);
+}
+
+vaadin-details-summary[theme~='summary-filled'][opened] {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* Bordered */
+
+vaadin-details[theme~='bordered'] {
+    border: 1px solid var(--lumo-contrast-20pct);
+    border-radius: var(--lumo-border-radius-m);
+    box-sizing: border-box;
+}
+
+vaadin-details[theme~='bordered']::part(content) {
+    padding-inline: var(--lumo-space-m);
+}
+
+vaadin-details-summary[theme~='bordered'] {
+    padding: var(--lumo-space-s) calc(var(--lumo-space-s) + var(--lumo-space-xs) / 2);
+}
+
+vaadin-grid::part(open-project) {
+    color: var(--lumo-success-text-color);
+}
+
+vaadin-grid::part(closed-project) {
+    color: var(--lumo-error-text-color);
+}

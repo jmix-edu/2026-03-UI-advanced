@@ -51,7 +51,7 @@
                   minHeight="20em"
                   dataContainer="clientsDc"
                   columnReorderingAllowed="true"
-                  selectionMode="MULTI">
+                  selectionMode="MULTI" css="owerflow: auto">
             <actions>
                 <action id="createAction" type="list_create"/>
                 <action id="editAction" type="list_edit"/>

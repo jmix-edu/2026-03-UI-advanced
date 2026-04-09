@@ -17,12 +17,15 @@ version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url = 'https://nexus.jmix.io/repository/public'
     }
 }
 
 dependencies {
+    implementation 'com.company:awesome-theme:1.0-SNAPSHOT'
+
     implementation 'io.jmix.jmxconsole:jmix-jmxconsole-starter'
 
     implementation 'io.jmix.core:jmix-core-starter'

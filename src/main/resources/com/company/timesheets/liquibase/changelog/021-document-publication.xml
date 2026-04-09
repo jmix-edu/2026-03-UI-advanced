@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- Добавляем статус документа, чтобы отделить редактируемый draft от опубликованной версии. -->
+    <changeSet id="021-01-document-status" author="codex">
+        <addColumn tableName="TS_DOCUMENT">
+            <column name="STATUS" type="VARCHAR(20)" defaultValue="draft">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <!-- Переносим файлы в отдельную таблицу вложений: это база для нескольких attachment-ов на один документ. -->
+    <changeSet id="021-02-document-attachment" author="codex">
+        <createTable tableName="TS_DOCUMENT_ATTACHMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TS_DOCUMENT_ATTACHMENT"/>
+            </column>
+            <column name="DOCUMENT_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FILE_REF" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="TS_DOCUMENT_ATTACHMENT"
+                                 baseColumnNames="DOCUMENT_ID"
+                                 constraintName="FK_TS_DOC_ATTACHMENT_ON_DOCUMENT"
+                                 referencedTableName="TS_DOCUMENT"
+                                 referencedColumnNames="ID"/>
+    </changeSet>
+
+    <!-- Миграция сохраняет уже существующий одиночный ATTACHMENT как первую запись в новой таблице. -->
+    <changeSet id="021-03-migrate-document-attachment" author="codex">
+        <sql>
+            insert into TS_DOCUMENT_ATTACHMENT (ID, DOCUMENT_ID, FILE_NAME, FILE_REF, VERSION)
+            select ID,
+                   ID,
+                   split_part(ATTACHMENT, '|', 3),
+                   ATTACHMENT,
+                   1
+            from TS_DOCUMENT
+            where ATTACHMENT is not null;
+        </sql>
+
+        <dropColumn tableName="TS_DOCUMENT" columnName="ATTACHMENT"/>
+    </changeSet>
+
+    <!-- Персональная карточка ознакомления хранит статус, даты просмотра/подписи и уникальна по паре документ+пользователь. -->
+    <changeSet id="021-04-document-acknowledgement" author="codex">
+        <createTable tableName="TS_DOCUMENT_ACKNOWLEDGEMENT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_TS_DOCUMENT_ACKNOWLEDGEMENT"/>
+            </column>
+            <column name="DOCUMENT_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+            <column name="STATUS" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SENT_AT" type="${offsetDateTime.type}"/>
+            <column name="VIEWED_AT" type="${offsetDateTime.type}"/>
+            <column name="SIGNED_AT" type="${offsetDateTime.type}"/>
+            <column name="SIGNATURE_INFO" type="VARCHAR(1000)"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="${offsetDateTime.type}"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="TS_DOCUMENT_ACKNOWLEDGEMENT"
+                                 baseColumnNames="DOCUMENT_ID"
+                                 constraintName="FK_TS_DOC_ACK_ON_DOCUMENT"
+                                 referencedTableName="TS_DOCUMENT"
+                                 referencedColumnNames="ID"/>
+        <addForeignKeyConstraint baseTableName="TS_DOCUMENT_ACKNOWLEDGEMENT"
+                                 baseColumnNames="USER_ID"
+                                 constraintName="FK_TS_DOC_ACK_ON_USER"
+                                 referencedTableName="TS_USER"
+                                 referencedColumnNames="ID"/>
+        <addUniqueConstraint tableName="TS_DOCUMENT_ACKNOWLEDGEMENT"
+                             columnNames="DOCUMENT_ID, USER_ID"
+                             constraintName="IDX_TS_DOC_ACK_UNQ"/>
+    </changeSet>
+</databaseChangeLog>

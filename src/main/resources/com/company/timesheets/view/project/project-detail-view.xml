@@ -10,12 +10,12 @@
                 <property name="tasks" fetchPlan="_base"/>
                 <property name="participants" fetchPlan="_base"/>
             </fetchPlan>
-            <loader/>
+            <loader id="projectDl"/>
         </instance>
         <collection id="tasksDc" class="com.company.timesheets.entity.Task">
             <loader id="tasksDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from ts_Task e where e.project = :container_projectDc]]>
+                    <![CDATA[select e from ts_Task e where e.project = :project]]>
                 </query>
             </loader>
             <fetchPlan extends="_base">
@@ -26,7 +26,7 @@
         <collection id="participantsDc" class="com.company.timesheets.entity.ProjectParticipant">
             <loader id="participantsDl" readOnly="true">
                 <query>
-                    <![CDATA[select e from ts_ProjectParticipant e where e.project = :container_projectDc]]>
+                    <![CDATA[select e from ts_ProjectParticipant e where e.project = :project]]>
                 </query>
             </loader>
             <fetchPlan extends="_base">
@@ -43,7 +43,14 @@
         </collection>
     </data>
     <facets>
-        <dataLoadCoordinator auto="true"/>
+        <dataLoadCoordinator auto="false">
+            <refresh loader="projectDl">
+                <onViewEvent type="BeforeShow"/>
+            </refresh>
+            <refresh loader="clientsDl">
+                <onViewEvent type="BeforeShow"/>
+            </refresh>
+        </dataLoadCoordinator>
     </facets>
     <actions>
         <action id="saveAction" type="detail_saveClose"/>

@@ -5,6 +5,8 @@
           title="msg://com.company.timesheets/menu_config.timesheets.title">
         <item view="ts_TimeEntry.my"
               title="msg://com.company.timesheets.view.mytimeentrylist/myTimeEntryListView.title"/>
+        <item view="ts_DocumentAcknowledgement.my"
+              title="msg://com.company.timesheets.view.documentacknowledgement/myDocumentAcknowledgementListView.title"/>
         <item view="ts_Task.my" description="msg://com.company.timesheets/menu_config.ts_Task.my.description"
               title="msg://com.company.timesheets/menu_config.ts_Task.my.title"/>
         <item view="ts_Client_only.list" title="msg://com.company.timesheets.view.client/clientListOnlyView.title"/>
@@ -20,6 +22,8 @@
         <item view="ts_TaskType.list" title="msg://com.company.timesheets.view.tasktype/taskTypeListView.title"/>
         <item view="ts_ProjectRole.list"
               title="msg://com.company.timesheets.view.projectrole/projectRoleListView.title"/>
+        <item view="ts_HtmlComponentDemoView"
+              title="msg://com.company.timesheets.view.htmldemo/htmlComponentDemoView.title"/>
     </menu>
     <separator/>
     <menu id="administration" description="msg://com.company.timesheets/menu_config.administration.description"

@@ -5,8 +5,15 @@
     <data>
         <instance id="documentDc"
                   class="com.company.timesheets.entity.Document">
-            <fetchPlan extends="_base"/>
+            <fetchPlan extends="_base">
+                <property name="attachments" fetchPlan="_base"/>
+                <property name="acknowledgements" fetchPlan="_base">
+                    <property name="user" fetchPlan="_base"/>
+                </property>
+            </fetchPlan>
             <loader/>
+            <collection id="attachmentsDc" property="attachments"/>
+            <collection id="acknowledgementsDc" property="acknowledgements"/>
         </instance>
     </data>
     <facets>
@@ -17,35 +24,67 @@
         <action id="closeAction" type="detail_close"/>
     </actions>
     <layout>
-        <formLayout id="form" dataContainer="documentDc">
-            <textField id="nameField" property="name"/>
-            <textArea id="descriptionField"
-                      property="description"
-                      colspan="2"
-                      height="10em"/>
-            <hbox id="attachmentBox"
-                  colspan="2"
-                  width="100%"
-                  alignItems="END"
-                  expand="attachmentField">
-                <fileStorageUploadField id="attachmentField"
-                                        property="attachment"
-                                        fileNameVisible="true"
-                                        fileStoragePutMode="MANUAL"
-                                        clearButtonVisible="false"
-                                        dataContainer="documentDc"
-                                        acceptedFileTypes=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"/>
-                <button id="clearAttachmentBtn" icon="CLOSE_BIG">
-                    <tooltip text="msg://clearAttachmentBtn.tooltip"/>
-                </button>
-            </hbox>
-            <textField id="pendingUploadField"
-                       label="msg://pendingUploadField.label"
-                       readOnly="true"
-                       colspan="2"
-                       visible="false"/>
-        </formLayout>
+        <tabSheet id="tabSheet" width="100%" minHeight="32em">
+            <tab id="documentTab" label="msg://com.company.timesheets.entity/Document">
+                <formLayout id="form" dataContainer="documentDc">
+                    <textField id="nameField" property="name"/>
+                    <textField id="statusField" readOnly="true"/>
+                    <textArea id="descriptionField"
+                              property="description"
+                              colspan="2"
+                              height="10em"/>
+                </formLayout>
+            </tab>
+            <tab id="attachmentsTab" label="msg://com.company.timesheets.entity/Document.attachments">
+                <vbox id="attachmentsWrapper" height="100%" padding="false">
+                    <hbox id="attachmentUploadBox"
+                          width="100%"
+                          alignItems="END"
+                          expand="attachmentUploadField">
+                        <fileStorageUploadField id="attachmentUploadField"
+                                                fileNameVisible="true"
+                                                fileStoragePutMode="MANUAL"
+                                                clearButtonVisible="false"
+                                                acceptedFileTypes=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg"/>
+                        <button id="clearPendingUploadsBtn" icon="ERASER">
+                            <tooltip text="msg://clearPendingUploadsBtn.tooltip"/>
+                        </button>
+                        <button id="removeAttachmentBtn" icon="TRASH">
+                            <tooltip text="msg://removeAttachmentBtn.tooltip"/>
+                        </button>
+                    </hbox>
+                    <textField id="pendingUploadField"
+                               label="msg://pendingUploadField.label"
+                               readOnly="true"
+                               visible="false"/>
+                    <dataGrid id="attachmentsDataGrid"
+                              dataContainer="attachmentsDc"
+                              width="100%"
+                              minHeight="14em">
+                        <columns resizable="true">
+                            <column property="fileName"/>
+                        </columns>
+                    </dataGrid>
+                </vbox>
+            </tab>
+            <tab id="acknowledgementsTab" label="msg://com.company.timesheets.entity/Document.acknowledgements">
+                <dataGrid id="acknowledgementsDataGrid"
+                          dataContainer="acknowledgementsDc"
+                          width="100%"
+                          minHeight="14em">
+                    <columns resizable="true">
+                        <column property="user"/>
+                        <column property="status"/>
+                        <column property="sentAt"/>
+                        <column property="viewedAt"/>
+                        <column property="signedAt"/>
+                    </columns>
+                </dataGrid>
+            </tab>
+        </tabSheet>
         <hbox id="detailActions">
+            <button id="nextDraftBtn" text="msg://nextDraftBtn.text"/>
+            <button id="publishBtn" text="msg://publishBtn.text"/>
             <button id="saveAndCloseBtn" action="saveAction"/>
             <button id="closeBtn" action="closeAction"/>
         </hbox>

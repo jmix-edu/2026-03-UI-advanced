@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<view xmlns="http://jmix.io/schema/flowui/view"
+      title="msg://documentAcknowledgementDetailView.title"
+      focusComponent="documentNameField">
+    <!-- Детальный экран без редактирования master-документа: сотрудник видит текст, вложения и кнопку подписи. -->
+    <data>
+        <instance id="acknowledgementDc"
+                  class="com.company.timesheets.entity.DocumentAcknowledgement">
+            <fetchPlan extends="_base">
+                <property name="document" fetchPlan="_base">
+                    <property name="attachments" fetchPlan="_base"/>
+                </property>
+                <property name="user" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+        </instance>
+        <collection id="attachmentsDc" class="com.company.timesheets.entity.DocumentAttachment"/>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+    </facets>
+    <actions>
+        <action id="closeAction" type="detail_close"/>
+    </actions>
+    <layout>
+        <formLayout id="form">
+            <textField id="documentNameField" label="msg://com.company.timesheets.entity/Document" readOnly="true"/>
+            <textField id="statusField" label="msg://com.company.timesheets.entity/DocumentAcknowledgement.status" readOnly="true"/>
+            <textArea id="documentDescriptionField"
+                      label="msg://com.company.timesheets.entity/Document.description"
+                      readOnly="true"
+                      colspan="2"
+                      height="10em"/>
+        </formLayout>
+        <dataGrid id="attachmentsDataGrid"
+                  dataContainer="attachmentsDc"
+                  width="100%"
+                  minHeight="16em">
+            <columns resizable="true">
+                <column property="fileName"/>
+            </columns>
+        </dataGrid>
+        <hbox id="detailActions">
+            <button id="signBtn" text="msg://signBtn.text"/>
+            <button id="closeBtn" action="closeAction"/>
+        </hbox>
+    </layout>
+</view>

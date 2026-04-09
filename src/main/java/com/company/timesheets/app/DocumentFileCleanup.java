@@ -1,7 +1,6 @@
 package com.company.timesheets.app;
 
-import com.company.timesheets.entity.Document;
-import io.jmix.core.FileRef;
+import com.company.timesheets.entity.DocumentAttachment;
 import io.jmix.core.event.EntityChangedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -17,24 +16,13 @@ public class DocumentFileCleanup {
     }
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
-    public void onDocumentChanged(EntityChangedEvent<Document> event) {
+    public void onDocumentAttachmentChanged(EntityChangedEvent<DocumentAttachment> event) {
         /*
-         * Cleanup постоянного storage делаем только после коммита.
-         *
-         * Почему не раньше:
-         * 1. При rollback нельзя терять старый файл.
-         * 2. До коммита ещё неясно, действительно ли замена/удаление состоялись.
-         *
-         * Поэтому здесь удаляем только "старый" уже сохранённый файл:
-         * - при замене attachment;
-         * - при удалении самой сущности.
+         * Физический файл удаляем только после коммита удаления attachment-сущности.
+         * Пока пользователь редактирует черновик, отмена экрана не должна затронуть storage.
          */
-        if (event.getType() == EntityChangedEvent.Type.UPDATED && event.getChanges().isChanged("attachment")) {
-            documentFileService.deleteStoredFile(event.getChanges().getOldValue("attachment"));
-        }
-
         if (event.getType() == EntityChangedEvent.Type.DELETED) {
-            documentFileService.deleteStoredFile(event.getChanges().getOldValue("attachment"));
+            documentFileService.deleteStoredFileIfUnused(event.getChanges().getOldValue("file"));
         }
     }
 }

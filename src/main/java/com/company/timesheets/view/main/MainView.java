@@ -1,5 +1,7 @@
 package com.company.timesheets.view.main;
 
+import com.company.timesheets.app.DocumentAcknowledgementService;
+import com.company.timesheets.event.DocumentAcknowledgementChangedEvent;
 import com.company.timesheets.entity.TimeEntry;
 import com.company.timesheets.entity.User;
 import com.company.timesheets.event.TimeEntryStatusChangedEvent;
@@ -38,6 +40,8 @@ public class MainView extends StandardMainView {
     private Metadata metadata;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private DocumentAcknowledgementService documentAcknowledgementService;
     @ViewComponent
     private JmixListMenu menu;
 
@@ -130,6 +134,7 @@ public class MainView extends StandardMainView {
     @Subscribe
     public void onInit(final InitEvent event) {
         updateRejectedTimeEntries();
+        updatePendingAcknowledgements();
     }
 
     @EventListener
@@ -151,5 +156,21 @@ public class MainView extends StandardMainView {
             badge.getElement().getThemeList().add("badge error");
         }
         menu.getMenuItem("ts_TimeEntry.my").setSuffixComponent(badge);
+    }
+
+    @EventListener
+    private void documentAcknowledgementChanged(DocumentAcknowledgementChangedEvent event) {
+        updatePendingAcknowledgements();
+    }
+
+    private void updatePendingAcknowledgements() {
+        long count = documentAcknowledgementService.countPendingForCurrentUser();
+
+        Span badge = null;
+        if (count > 0) {
+            badge = new Span(String.valueOf(count));
+            badge.getElement().getThemeList().add("badge contrast");
+        }
+        menu.getMenuItem("ts_DocumentAcknowledgement.my").setSuffixComponent(badge);
     }
 }

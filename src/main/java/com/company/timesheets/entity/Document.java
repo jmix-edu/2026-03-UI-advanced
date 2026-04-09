@@ -1,20 +1,25 @@
 package com.company.timesheets.entity;
 
-import io.jmix.core.FileRef;
+import io.jmix.core.DeletePolicy;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
+import io.jmix.core.entity.annotation.OnDelete;
+import io.jmix.core.metamodel.annotation.Composition;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
@@ -36,8 +41,19 @@ public class Document {
     @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "ATTACHMENT", length = 1024)
-    private FileRef attachment;
+    @NotNull
+    @Column(name = "STATUS", nullable = false, length = 20)
+    private String status;
+
+    @OnDelete(DeletePolicy.CASCADE)
+    @Composition
+    @OneToMany(mappedBy = "document")
+    private List<DocumentAttachment> attachments = new ArrayList<>();
+
+    @OnDelete(DeletePolicy.CASCADE)
+    @Composition
+    @OneToMany(mappedBy = "document")
+    private List<DocumentAcknowledgement> acknowledgements = new ArrayList<>();
 
     @Version
     @Column(name = "VERSION", nullable = false)
@@ -51,12 +67,28 @@ public class Document {
     @Column(name = "DELETED_DATE")
     private OffsetDateTime deletedDate;
 
-    public FileRef getAttachment() {
-        return attachment;
+    public List<DocumentAcknowledgement> getAcknowledgements() {
+        return acknowledgements;
     }
 
-    public void setAttachment(FileRef attachment) {
-        this.attachment = attachment;
+    public void setAcknowledgements(List<DocumentAcknowledgement> acknowledgements) {
+        this.acknowledgements = acknowledgements;
+    }
+
+    public List<DocumentAttachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<DocumentAttachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public DocumentStatus getStatus() {
+        return status == null ? null : DocumentStatus.fromId(status);
+    }
+
+    public void setStatus(DocumentStatus status) {
+        this.status = status == null ? null : status.getId();
     }
 
     public String getDescription() {
@@ -105,5 +137,10 @@ public class Document {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    @jakarta.annotation.PostConstruct
+    public void postConstruct() {
+        setStatus(DocumentStatus.DRAFT);
     }
 }

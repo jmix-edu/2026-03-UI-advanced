@@ -6,8 +6,12 @@ import com.company.timesheets.entity.TimeEntry;
 import com.company.timesheets.view.main.MainView;
 import com.company.timesheets.view.timeentry.TimeEntryDetailView;
 import com.vaadin.flow.component.ClickEvent;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.QueryParameters;
 import com.vaadin.flow.router.Route;
+import io.jmix.core.MetadataTools;
 import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Notifications;
 import io.jmix.flowui.component.grid.DataGrid;
@@ -32,6 +36,8 @@ public class MyTimeEntryListView extends StandardView {
     private Notifications notifications;
     @ViewComponent
     private Timer timer;
+    @Autowired
+    private MetadataTools metadataTools;
 
     @Subscribe("timeEntriesDataGrid.copy")
     public void onTimeEntriesDataGridCopy(final ActionPerformedEvent event) {
@@ -82,5 +88,20 @@ public class MyTimeEntryListView extends StandardView {
     @Subscribe("timer")
     public void onTimerTimerStop(final Timer.TimerStopEvent event) {
         notifications.show("Timer stopped");
+    }
+
+    @Supply(to = "timeEntriesDataGrid.status", subject = "renderer")
+    private Renderer<TimeEntry> timeEntriesDataGridStatusRenderer() {
+        return new ComponentRenderer<>(Span::new, (span, timeEntry) -> {
+            String theme = switch (timeEntry.getStatus()) {
+                case NEW -> "";
+                case APPROVED -> "success";
+                case REJECTED -> "error";
+                case CLOSED -> "contrast";
+            };
+
+            span.getElement().setAttribute("theme", "badge " + theme);
+            span.setText(metadataTools.format(timeEntry.getStatus()));
+        });
     }
 }
