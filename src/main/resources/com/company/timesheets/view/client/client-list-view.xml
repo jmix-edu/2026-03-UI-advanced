@@ -13,10 +13,6 @@
             </loader>
         </collection>
     </data>
-    <actions>
-        <action id="selectAction" type="lookup_select"/>
-        <action id="discardAction" type="lookup_discard"/>
-    </actions>
     <facets>
         <dataLoadCoordinator auto="true"/>
         <urlQueryParameters>
@@ -30,27 +26,9 @@
             <properties include=".*"/>
         </genericFilter>
         <hbox id="buttonsPanel" classNames="buttons-panel">
-            <button id="createBtn" action="clientsDataGrid.create"/>
-            <button id="editBtn" action="clientsDataGrid.edit"/>
-            <button id="removeBtn" action="clientsDataGrid.remove"/>
+            <button id="createBtn" text="msg:///actions.Create" icon="PLUS" themeNames="primary"/>
             <simplePagination id="pagination" dataLoader="clientsDl"/>
         </hbox>
-        <dataGrid id="clientsDataGrid"
-                  width="100%"
-                  minHeight="20em"
-                  dataContainer="clientsDc">
-            <actions>
-                <action id="create" type="list_create"/>
-                <action id="edit" type="list_edit"/>
-                <action id="remove" type="list_remove"/>
-            </actions>
-            <columns>
-                <column property="name"/>
-            </columns>
-        </dataGrid>
-        <hbox id="lookupActions" visible="false">
-            <button id="selectBtn" action="selectAction"/>
-            <button id="discardBtn" action="discardAction"/>
-        </hbox>
+        <virtualList id="clientsList" itemsContainer="clientsDc"/>
     </layout>
 </view>

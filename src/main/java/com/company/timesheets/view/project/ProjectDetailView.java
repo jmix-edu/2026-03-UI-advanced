@@ -1,13 +1,26 @@
 package com.company.timesheets.view.project;
 
+import com.company.timesheets.entity.Client;
 import com.company.timesheets.entity.Project;
 import com.company.timesheets.entity.ProjectParticipant;
 import com.company.timesheets.entity.Task;
 import com.company.timesheets.view.main.MainView;
+import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.Text;
+import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.FlexLayout;
+import com.vaadin.flow.data.renderer.ComponentRenderer;
+import com.vaadin.flow.data.renderer.Renderer;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.streams.DownloadHandler;
+import com.vaadin.flow.server.streams.DownloadResponse;
+import com.vaadin.flow.theme.lumo.LumoUtility;
 import io.jmix.core.DataManager;
 import io.jmix.flowui.DialogWindows;
 import io.jmix.flowui.Notifications;
+import io.jmix.flowui.UiComponents;
 import io.jmix.flowui.component.grid.DataGrid;
 import io.jmix.flowui.component.tabsheet.JmixTabSheet;
 import io.jmix.flowui.kit.action.ActionPerformedEvent;
@@ -16,6 +29,8 @@ import io.jmix.flowui.model.CollectionContainer;
 import io.jmix.flowui.model.CollectionLoader;
 import io.jmix.flowui.view.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.ByteArrayInputStream;
 
 @Route(value = "projects/:id", layout = MainView.class)
 @ViewController("ts_Project.detail")
@@ -30,6 +45,9 @@ public class ProjectDetailView extends StandardDetailView<Project> {
 
     private DataGrid<Task> tasksDataGrid;
     private DataGrid<ProjectParticipant> participantsDataGrid;
+    @Autowired
+    private UiComponents uiComponents;
+
     @Autowired
     private Notifications notifications;
     @ViewComponent
@@ -51,6 +69,46 @@ public class ProjectDetailView extends StandardDetailView<Project> {
         }
     }
 
+    @Supply(to = "clientField", subject = "renderer")
+    private Renderer<Client> clientFieldRenderer() {
+        return new ComponentRenderer<>(client -> {
+            FlexLayout wrapper = uiComponents.create(FlexLayout.class);
+
+            wrapper.setAlignItems(FlexComponent.Alignment.CENTER);
+            wrapper.addClassNames(LumoUtility.Gap.MEDIUM, LumoUtility.JustifyContent.CENTER);
+
+            String clientName = client.getName();
+            wrapper.add(
+                    createAvatar(clientName, client.getImage(), "var(--lumo-size-xs)"),
+                    new Text(clientName)
+            );
+
+            return wrapper;
+        });
+    }
+
+    private Avatar createAvatar(String clientName, byte[] image, String size) {
+        Avatar avatar = uiComponents.create(Avatar.class);
+        avatar.setName(clientName);
+
+        if (image != null) {
+            DownloadHandler handler = DownloadHandler.fromInputStream(downloadEvent ->
+                new DownloadResponse(
+                        new ByteArrayInputStream(image),
+                        "avatar.img",
+                        "application/octet-stream",
+                        image.length
+                )
+            );
+            avatar.setImageHandler(handler);
+        }
+
+        avatar.setWidth(size);
+        avatar.setHeight(size);
+
+        return avatar;
+    }
+
     private void initTasks() {
         tasksDl.setParameter("project", getEditedEntity());
         tasksDl.load();
@@ -60,7 +118,7 @@ public class ProjectDetailView extends StandardDetailView<Project> {
             return;
         }
 
-        tasksDataGrid =(DataGrid<Task>) getContent().findComponent("tasksDataGrid").get();
+        tasksDataGrid = (DataGrid<Task>) getContent().findComponent("tasksDataGrid").get();
         BaseAction createAction = (BaseAction) tasksDataGrid.getAction("create");
         createAction.addActionPerformedListener(this::onTasksDataGridCreate);
         BaseAction editAction = (BaseAction) tasksDataGrid.getAction("edit");
@@ -76,7 +134,7 @@ public class ProjectDetailView extends StandardDetailView<Project> {
             return;
         }
 
-        participantsDataGrid =(DataGrid<ProjectParticipant>) getContent().findComponent("participantsDataGrid").get();
+        participantsDataGrid = (DataGrid<ProjectParticipant>) getContent().findComponent("participantsDataGrid").get();
         BaseAction createAction = (BaseAction) participantsDataGrid.getAction("create");
         createAction.addActionPerformedListener(this::onParticipantsDataGridCreate);
         BaseAction editAction = (BaseAction) participantsDataGrid.getAction("edit");

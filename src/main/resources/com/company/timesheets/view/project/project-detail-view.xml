@@ -56,89 +56,97 @@
         <action id="saveAction" type="detail_saveClose"/>
         <action id="closeAction" type="detail_close"/>
     </actions>
-    <layout>
-        <tabSheet id="tabSheet" width="100%" minHeight="30em">
-            <tab id="projectFormTab" label="msg://com.company.timesheets.entity/Project">
-                <formLayout id="form" dataContainer="projectDc">
-                    <textField id="nameField" property="name">
-                        <prefix>
-                            <icon icon="USER_CARD"/>
-                        </prefix>
-                    </textField>
-                    <textArea id="descriptionField"
-                              height="9.5em"
-                              property="description" colspan="2">
-                        <prefix>
-                            <icon icon="COMMENT_O"/>
-                        </prefix>
-                    </textArea>
-                    <entityComboBox id="clientField"
-                                    property="client"
-                                    itemsContainer="clientsDc">
-                        <prefix>
-                            <icon icon="USER"/>
-                        </prefix>
-                        <actions>
-                            <action id="entityLookup" type="entity_lookup"/>
-                            <action id="entityClear" type="entity_clear"/>
-                        </actions>
-                    </entityComboBox>
-                    <select id="statusField" property="status"/>
-                </formLayout>
+    <layout expand="contentBox"
+            padding="false"
+            spacing="false"
+            alignItems="STRETCH">
+        <vbox id="contentBox"
+              expand="tabSheet"
+              classNames="overflow-auto"
+              padding="false">
+            <tabSheet id="tabSheet" width="100%" minHeight="30em">
+                <tab id="projectFormTab" label="msg://com.company.timesheets.entity/Project">
+                    <formLayout id="form" dataContainer="projectDc">
+                        <textField id="nameField" property="name">
+                            <prefix>
+                                <icon icon="USER_CARD"/>
+                            </prefix>
+                        </textField>
+                        <textArea id="descriptionField"
+                                  height="9.5em"
+                                  property="description" colspan="2">
+                            <prefix>
+                                <icon icon="COMMENT_O"/>
+                            </prefix>
+                        </textArea>
+                        <entityComboBox id="clientField"
+                                        property="client"
+                                        itemsContainer="clientsDc">
+                            <prefix>
+                                <icon icon="USER"/>
+                            </prefix>
+                            <actions>
+                                <action id="entityLookup" type="entity_lookup"/>
+                                <action id="entityClear" type="entity_clear"/>
+                            </actions>
+                        </entityComboBox>
+                        <select id="statusField" property="status"/>
+                    </formLayout>
 
-            </tab>
-            <tab id="tasksTab" label="msg://com.company.timesheets.entity/Project.tasks" lazy="true">
-                <vbox id="tasksWrapper" height="100%" padding="false">
-                    <hbox id="tasksButtonsPanel" classNames="buttons-panel">
-                        <button id="taskCreateBtn" action="tasksDataGrid.create"/>
-                        <button id="taskEditBtn" action="tasksDataGrid.edit"/>
-                        <button id="taskRemoveBtn" action="tasksDataGrid.remove"/>
-                        <simplePagination id="tasksPagination" dataLoader="tasksDl"/>
-                    </hbox>
-                    <dataGrid id="tasksDataGrid"
+                </tab>
+                <tab id="tasksTab" label="msg://com.company.timesheets.entity/Project.tasks" lazy="true">
+                    <vbox id="tasksWrapper" height="100%" padding="false">
+                        <hbox id="tasksButtonsPanel" classNames="buttons-panel">
+                            <button id="taskCreateBtn" action="tasksDataGrid.create"/>
+                            <button id="taskEditBtn" action="tasksDataGrid.edit"/>
+                            <button id="taskRemoveBtn" action="tasksDataGrid.remove"/>
+                            <simplePagination id="tasksPagination" dataLoader="tasksDl"/>
+                        </hbox>
+                        <dataGrid id="tasksDataGrid"
                                   dataContainer="tasksDc"
                                   width="100%">
-                        <actions>
-                            <action id="create" type="list_create"/>
-                            <action id="edit" type="list_edit"/>
-                            <action id="remove" type="list_remove"/>
-                        </actions>
-                        <columns>
-                            <column property="name"/>
-                            <column property="type"/>
-                            <column property="status"/>
-                            <column property="description" flexGrow="2"/>
-                        </columns>
-                    </dataGrid>
-                </vbox>
-            </tab>
-            <tab id="participantsTab" label="msg://com.company.timesheets.entity/Project.participants" lazy="true">
-                <vbox id="participantsWrapper" height="100%" padding="false">
-                    <hbox id="participantsButtonsPanel" classNames="buttons-panel">
-                        <button id="participantCreateBtn" action="participantsDataGrid.create"/>
-                        <button id="participantEditBtn" action="participantsDataGrid.edit"/>
-                        <button id="participantRemoveBtn" action="participantsDataGrid.remove"/>
-                        <simplePagination id="participantsPagination" dataLoader="participantsDl" />
-                    </hbox>
-                    <dataGrid id="participantsDataGrid"
+                            <actions>
+                                <action id="create" type="list_create"/>
+                                <action id="edit" type="list_edit"/>
+                                <action id="remove" type="list_remove"/>
+                            </actions>
+                            <columns>
+                                <column property="name"/>
+                                <column property="type"/>
+                                <column property="status"/>
+                                <column property="description" flexGrow="2"/>
+                            </columns>
+                        </dataGrid>
+                    </vbox>
+                </tab>
+                <tab id="participantsTab" label="msg://com.company.timesheets.entity/Project.participants" lazy="true">
+                    <vbox id="participantsWrapper" height="100%" padding="false">
+                        <hbox id="participantsButtonsPanel" classNames="buttons-panel">
+                            <button id="participantCreateBtn" action="participantsDataGrid.create"/>
+                            <button id="participantEditBtn" action="participantsDataGrid.edit"/>
+                            <button id="participantRemoveBtn" action="participantsDataGrid.remove"/>
+                            <simplePagination id="participantsPagination" dataLoader="participantsDl"/>
+                        </hbox>
+                        <dataGrid id="participantsDataGrid"
                                   dataContainer="participantsDc"
                                   width="100%">
-                        <actions>
-                            <action id="create" type="list_create"/>
-                            <action id="edit" type="list_edit"/>
-                            <action id="remove" type="list_remove"/>
-                        </actions>
-                        <columns>
-                            <column property="user"/>
-                            <column property="role"/>
-                        </columns>
-                    </dataGrid>
-                </vbox>
-            </tab>
-        </tabSheet>
-
-
-        <hbox id="detailActions">
+                            <actions>
+                                <action id="create" type="list_create"/>
+                                <action id="edit" type="list_edit"/>
+                                <action id="remove" type="list_remove"/>
+                            </actions>
+                            <columns>
+                                <column property="user"/>
+                                <column property="role"/>
+                            </columns>
+                        </dataGrid>
+                    </vbox>
+                </tab>
+            </tabSheet>
+        </vbox>
+        <hbox id="detailActions"
+              padding="true"
+              classNames="px-m py-xs bg-contrast-5">
             <button id="saveAndCloseBtn" action="saveAction"/>
             <button id="closeBtn" action="closeAction"/>
         </hbox>
